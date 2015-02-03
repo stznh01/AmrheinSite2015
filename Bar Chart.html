@@ -35,6 +35,7 @@
 			// NEXT: encapsulate new data
 
 			d3.select("body").append("h1").text("Sample market performance Barchart").style("font", "14px");
+			
 			var marketCap = [{fund: 138, year: "2002"},{fund: 146, year: "2003"},{fund: 157, year: "2004"},{fund: 168, year: "2005"},{fund: 175, year: "2006"},{fund: 183, year: "2007"},{fund: 180, year: "2008"},{fund: 192, year: "2009"},{fund: 188, year: "2010"},{fund: 198, year: "2011"},{fund: 192, year: "2012"},{fund: 227, year: "2013"},{fund: 268, year: "2014"}];
 
 			var width = 800,
@@ -129,7 +130,7 @@
 			   })
 
 			// Add labels
-			svg.selectAll("text.barLabel") // this way I won"t f**k up other text objects
+			svg.selectAll("text.barLabel") // this way I won't mess up other text objects
 			   .data(marketCap)
 			   .enter()
 			   .append("text")
