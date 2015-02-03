@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>Bar Chart sample with D3</title>
+		<script type="text/javascript" src="lib/d3.v3.js"></script>
+		<style type="text/css">
+
+			body {
+				background-color: lightgray;
+			}
+
+			svg {
+				background-color: white;
+			}
+
+			.axis path,
+			.axis line {
+				fill: none;
+				stroke: black;
+				shape-rendering: crispEdges;
+			}
+			
+			.axis text {
+				font-family: sans-serif;
+				font-size: 11px;
+			}
+
+		</style>
+	</head>
+	<body>
+		<script type="text/javascript">
+			// NEXT: Able to read in Excel data
+
+			// NEXT: encapsulate new data
+
+			d3.select("body").append("h1").text("Sample market performance Barchart").style("font", "14px");
+			var marketCap = [{fund: 138, year: "2002"},{fund: 146, year: "2003"},{fund: 157, year: "2004"},{fund: 168, year: "2005"},{fund: 175, year: "2006"},{fund: 183, year: "2007"},{fund: 180, year: "2008"},{fund: 192, year: "2009"},{fund: 188, year: "2010"},{fund: 198, year: "2011"},{fund: 192, year: "2012"},{fund: 227, year: "2013"},{fund: 268, year: "2014"}];
+
+			var width = 800,
+			    height = 500,
+				margin = {top: 40, right: 50, bottom: 40, left:50};
+
+			// bar chart y axis tuning
+			var barWidth = 30,
+				barPadding = 2,
+				yBarMax = d3.max(marketCap, function(d){return d.fund;}),
+				barYrange = height - margin.top - margin.bottom,
+				barXrange = width - margin.left - margin.right;
+
+			Date.prototype.addMonths = function(d) {
+				this.setMonth(this.getMonth() + d);
+				return this;
+			}
+
+			// Create scale functions
+			// NEXT x need to be fixed
+
+			// var xScale = d3.scale.linear()
+			// 					 .domain([2001.55, d3.max(marketCap, function(d) { return d.year; }) + .55])
+			// 					 .range([0, marketCap.length * (barWidth+ barPadding)]);
+
+			// var xScale1 = d3.scale.ordinal()
+			// 				.domain(d3.range(marketCap.length))
+			// 				.rangeRoundBands([0, marketCap.length * (barWidth + barPadding)]);
+			var xScaleLeftEnd = new Date(marketCap[0].year);
+			var xScaleRightEnd = new Date(marketCap[marketCap.length-1].year);
+
+			// Cheated with 6 month...
+			var xScale2 = d3.time.scale()
+							.domain([xScaleLeftEnd.addMonths(-6), d3.time.year.offset(xScaleRightEnd.addMonths(-6), 1)])
+							.rangeRound([0, marketCap.length * (barWidth + barPadding)]);
+
+			var yScale = d3.scale.linear()
+								 .domain([0, d3.max(marketCap, function(d) { return d.fund; })])
+								 .range([barYrange, 0]);
+			var xAxis = d3.svg.axis()
+							  .scale(xScale2)
+							  .orient("bottom")
+							  .tickFormat(d3.time.format("%Y"))
+							  .ticks(d3.time.year, 2);
+							  //.ticks(5);
+
+			var yAxis = d3.svg.axis()
+							  .scale(yScale)
+							  .orient("left")
+							  .ticks(5);
+
+			var svg = d3.select("body")
+						.append("svg")
+						.attr("width", width)
+						.attr("height", height)
+						.append("g")
+						.attr("class","barChart")
+						.attr("transform", "translate(" + margin.left + ", " + margin.top + ")");
+
+
+			svg.selectAll("rect")
+			   .data(marketCap)
+			   .enter()
+			   .append("rect")
+			   .attr("class", "fatStacks")
+			   .attr("x", function(d, i) {
+					// return i*((width-2*margin.left)/marketCap.length) + margin.left;
+					return i * (barWidth + barPadding);
+				})
+			   .attr("y", function(d){
+					return barYrange;
+				})
+			   .attr("width", barWidth)
+			   .attr("height", 0);
+
+
+			// data interaction
+			svg.selectAll("rect")
+			   .on("mouseover", function(d){
+			   		d3.select(this)
+			   		  .attr("fill","orange");
+			   })
+			   .on("mouseout", function(d){
+			   		d3.select(this)
+			   		  .transition()
+			   		  .duration(1000)
+			   		  .attr("fill","steelblue");
+			   })
+			   .on("click", function(d){
+			   	/* either a pop-up screen for history or a widened band.
+			   	 */
+			   })
+
+			// Add labels
+			svg.selectAll("text.barLabel") // this way I won"t f**k up other text objects
+			   .data(marketCap)
+			   .enter()
+			   .append("text")
+			   .attr("class", "barLabel") // must do this if do the above
+			   .text(function(d){return d.fund;})			   
+			   .attr("font-family", "sans-serif")
+			   .attr("font-size","1px")
+			   .attr("fill","white")
+			   .attr("text-anchor", "middle")
+			   .attr("x", function(d, i){return (i * (barWidth+barPadding) + barWidth/2);})
+			   .attr("y", barYrange)
+			
+			// Create X axis
+			// Caveat: x, y coordinate below are text!
+			svg.append("g")
+				.attr("class", "x axis")
+				.attr("transform", "translate(0," + (barYrange + 5) + ")")
+				.call(xAxis);
+
+			//xAxis.selectAll(".tick").attr("transform", "translate(-5,0)");
+
+			// Create Y axis
+			svg.append("g")
+				.attr("class", "y axis")
+				.attr("transform", "translate(" + -5 + ",0)")
+				.call(yAxis);
+
+			// Transition and easing function
+			// update1: builtIn Function works; not .js functions
+			svg.selectAll("rect")
+			   .transition()
+			   .delay(function(d, i){return 50 * i;})
+			   .duration(1500)
+			   .ease("elastic")
+			   .attr("y",function(d){return (barYrange - (barYrange/yBarMax * d.fund));})
+			   .attr("height", function(d){return d.fund/yBarMax*barYrange})
+			   .attr("fill","steelblue");
+
+			svg.selectAll(".barLabel")
+			   .transition()
+			   .delay(function(d, i){ return 50 * i;})
+			   .duration(1500)
+			   .ease("elastic")
+			   .attr("y",function(d){return barYrange - (barYrange/yBarMax * d.fund) + 15;})
+			   .attr("font-size","11px");
+
+			
+
+		</script>
+	</body>
+</html>
