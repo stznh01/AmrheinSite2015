@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>sd789av67d2jk3hfduoweio3vsd7893khjksdfuxjh3</title>
+		<script type="text/javascript" src="lib/d3.v3.js"></script>
+		<script type="text/javascript" src="synchronousImportJSON.js"></script>
+		<script type="text/javascript" src="http://code.jquery.com/jquery.min.js"></script>
+	</head>
+	<body>
+		<script type="text/javascript">
+			var width = 500;
+				height = 500;
+			var svg = d3.select('body').append('svg').attr('width', width).attr('height',height);
+
+			// var dataset = [1,2,3,4];
+
+			// $(function(){
+			// 	$.getJSON('someJson.json', function(data){
+			// 		var dataset = data;
+			// 		console.log("this must happen first");
+			// 		})
+			// 	}
+			// )
+			
+
+			// $.ajax({
+			// 	url: 'someJSON.json',
+			// 	asych: false, // doesn't work!
+			// 	dataType: 'json',
+			// 	success: function(data){
+			// 		var dataset = data;
+			// 		console.log("I must happen first!");
+			// 	}
+			// })
+
+			var dataset = loadJSON('someJSON.json');
+			console.log("I should happen first")
+
+
+			var pie = d3.layout.pie();
+			var outerRadius = width / 2;
+			var innerRadius = 0;
+			var arc = d3.svg.arc()
+                .innerRadius(innerRadius)
+                .outerRadius(outerRadius);
+
+            var arcs = svg.selectAll('g.arc')
+               .data(pie(dataset))
+               .enter()
+               .append('g')
+               .attr('class', 'arc')
+               .attr("transform", "translate(" + outerRadius + ", " + outerRadius + ")");
+
+            var color = d3.scale.category10();
+
+            arcs.append("path")
+			    .attr("fill", function(d, i) {
+			        return color(i);
+			    })
+			    .attr("d", arc);
+
+			arcs.append("text")
+			    .attr("transform", function(d) {
+			        return "translate(" + arc.centroid(d) + ")";
+			    })
+			    .attr("text-anchor", "middle")
+			    .text(function(d) {
+			        return d.value;
+			    });
+
+			console.log("I should happen last!")
+
+
+
+
+
+		</script>
+	</body>
+</html>
