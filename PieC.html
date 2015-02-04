@@ -34,7 +34,12 @@
 			// 	}
 			// })
 
-			var dataset = loadJSON("someJSON.json");
+			//var dataset = loadJSON("someJSON.json");
+			var dataRaw = loadJSON("someMoarJSON.json");
+			var dataset = [];
+			for (var i = 0;i < dataRaw.list.length; i++) {
+				dataset.push(dataRaw.list[i].value);
+			};
 			console.log("I should happen first")
 
 
