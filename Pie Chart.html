@@ -7,6 +7,8 @@
 		<script type="text/javascript" src="lib/d3.v3.js"></script>
 		<script src="http://d3js.org/d3.v3.min.js"></script>
 
+		<script type="text/javascript" src="synchronousImportJSON.js"></script>
+
 		<style type="text/css">
 
 			body {
@@ -35,8 +37,9 @@
 		<script type="text/javascript">
 			d3.select("body").append("h1").text("Sample Fund Balance Demonstration").style("font", "14px");
 			
-			// Load in data from document. Could be excelsheet.
-			/*
+			// Load in data from document. Could be excelsheet. For now I test with JSON
+			// Asynchronous issue
+			/* 
 			var data;
 			d3.json("ChapterFundData.json", function(error, json) {
 				if (error) {return console.warn(error);}
@@ -44,14 +47,13 @@
 			});
 			*/
 
+			var dataRaw = loadJSON("ChapterFundData.json");
 
-			var dataArray;
-			/* somehow I cannot reference data.fundData
-			for (var i = data.fundData.length - 1; i >= 0; i--) {
-				dataArray.push(data.fundData[i].assets + data.fundData[i].cash);
-			};
-			*/
-			dataArray = [338582.8, 552353.24, 835408.6, 419351.27];
+			// var dataArray;
+			// for (var i = dataRaw.fundData.length - 1; i >= 0; i--) {
+			// 	dataArray.push(dataRaw.fundData[i].assets + dataRaw.fundData[i].cash);
+			// };
+			var dataArray = dataRaw.fundData;
 
 			var width = 800,
     			height = 500;
@@ -71,15 +73,30 @@
 			    .attr("width", width)
 			    .attr("height", height)
 			  	.append("g")
+			  	.attr('class','arcs')
 			    .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
 
-			svg.selectAll("path")
-			    .data(pie(dataArray))
-			    .enter().append("path")
+			var arcs = svg.selectAll("g.arc")
+               .data(pie(function(d,i){ return dataArray[i].assets;}))
+               .enter()
+               .append("g")
+               .attr("class", "arc");
+
+			arcs.append("path")
+			    //.attr('class','arc')
 			    .each(function(d) { d.outerRadius = outerRadius - 20; })
 			    .attr("d", arc)
 			    .on("mouseover", arcTween(outerRadius, 0))
 			    .on("mouseout", arcTween(outerRadius - 20, 150));
+
+			arcs.append("text")
+			    .attr("transform", function(d) {
+			        return "translate(" + arc.centroid(d) + ")";
+			    })
+			    .attr("text-anchor", "middle")
+			    .text(function(d) {
+			        return d.value;
+			    });
 
 			function arcTween(outerRadius, delay) {
 			  return function() {
