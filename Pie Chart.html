@@ -49,11 +49,10 @@
 
 			var dataRaw = loadJSON("ChapterFundData.json");
 
-			// var dataArray;
-			// for (var i = dataRaw.fundData.length - 1; i >= 0; i--) {
-			// 	dataArray.push(dataRaw.fundData[i].assets + dataRaw.fundData[i].cash);
-			// };
 			var dataArray = dataRaw.fundData;
+			for (var i = 0; i < dataArray.length; i++) {
+				dataArray[i].value = dataArray[i].assets + dataArray[i].cash;
+			};
 
 			var width = 800,
     			height = 500;
@@ -63,7 +62,8 @@
 			    cornerRadius = 10;
 
 			var pie = d3.layout.pie()
-			    .padAngle(.02);
+			    .padAngle(.02)
+			    .value(function(d){return d.value;});
 
 			var arc = d3.svg.arc()
 			    .padRadius(outerRadius)
@@ -76,16 +76,14 @@
 			  	.attr('class','arcs')
 			    .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
 
-			// var dataset = [];
-			var arcs = svg.selectAll("g.arc")
-               .data(pie(/*function(d){
-               		for (var i = 0; i < dataArray.length; i++) {
-               			dataset.push(dataArray[i].assets);
+			//While I try greatly to avoid using such a method, I still have not found a alternative
+			var dataset = [];
+			for (var i = 0; i < dataArray.length; i++) {
+               			dataset.push(dataArray[i].value);
                		};
-               		
-                	return dataset;}*/
-                	dataArray
-            	))
+
+			var arcs = svg.selectAll("g.arc")
+               .data(pie(dataset))
                .enter()
                .append("g")
                .attr("class", "arc");

@@ -1,24 +1,24 @@
 {
 	"fundData": [
-		{"name":"Balanced Fund", "assets":377917.45, "cash":41433.82, "holdingList":[
+		{"name":"Balanced Fund", "value": ,"assets":377917.45, "cash":41433.82, "holdingList":[
 			{"name":"McDonalds Corp.", "ticker": "MCD", "sharesOutstdng": 538, "price": 92.51, "DOPurchase":"2011-11-22"},
 			{"name":"Microsoft", "ticker": "MSFT", "sharesOutstdng": 2000, "price": 41.28, "DOPurchase":"2006-9-27"},
 			{"name":"Stryker", "ticker": "SYK", "sharesOutstdng": 700, "price": 91.76, "DOPurchase":"2007-4-24"}
 			]
 		},
-		{"name":"Growth Fund", "assets":643054.08, "cash":192354.52, "holdingList":[
+		{"name":"Growth Fund", "value": ,"assets":643054.08, "cash":192354.52, "holdingList":[
 			{"name":"Agrium", "ticker": "AGU", "sharesOutstdng": 530, "price": 108.08, "DOPurchase":"2011-10-18"},
 			{"name":"Costco", "ticker": "COST", "sharesOutstdng": 500, "price": 146.00, "DOPurchase":"2013-11-5"},
 			{"name":"Exxon Mobil", "ticker": "XOM", "sharesOutstdng": 500, "price": 89.58, "DOPurchase":"2010-4-28"}
 			]
 		},
-		{"name":"Income Fund", "assets":485733.08, "cash":66620.16, "holdingList":[
+		{"name":"Income Fund", "value": ,"assets":485733.08, "cash":66620.16, "holdingList":[
 			{"name":"Air Product", "ticker": "APD", "sharesOutstdng": 351, "price": 147.68, "DOPurchase":"2012-4-26"},
 			{"name":"Home Depot", "ticker": "HD", "sharesOutstdng": 305, "price": 104.43, "DOPurchase":"2014-11-11"},
 			{"name":"IBM", "ticker": "IBM", "sharesOutstdng": 400, "price": 154.66, "DOPurchase":"2007-11-14"}
 			]
 		},
-		{"name":"Small Cap Fund", "assets":187915.43, "cash":150667.37, "holdingList":[
+		{"name":"Small Cap Fund", "value": ,"assets":187915.43, "cash":150667.37, "holdingList":[
 			{"name":"Actuant Corp.", "ticker": "ATU", "sharesOutstdng": 600, "price": 23.70, "DOPurchase":"2006-10-17"},
 			{"name":"Forward Air Corp.", "ticker": "FWRD", "sharesOutstdng": 600, "price": 45.43, "DOPurchase":"2008-4-15"},
 			{"name":"Krispy Kreme", "ticker": "KKD", "sharesOutstdng": 1004, "price": 19.34, "DOPurchase":"2013-9-23"}
