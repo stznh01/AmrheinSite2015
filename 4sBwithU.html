@@ -2,19 +2,23 @@
 <html lang="en">
 	<head>
 		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<title>Force-Directed Graph Demonstration</title>
+		<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" rel="stylesheet">
 		<script type="text/javascript" src="lib/d3.v3.js"></script>
-		<script type="text/javascript" src="aicDB.js"></script>
+		<script type="text/javascript" src="aicDB2.js"></script>
 		<script src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"></script>
 		<style type="text/css">
 			body {
 				background-color: lightgray;
+				margin: 10px;
 			}
 
 			svg {
 				background-color: white;
 			}
 			.node {
+				stroke: #fff;
 				stroke-width: 1px;
 			}
 			.link {
@@ -52,10 +56,17 @@
 		</style>
 	</head>
 	<body>
-		<h1>Amrhein Investment Club: Fund Tree</h1>
+		<div class = "container-fluid">
+			<header>
+				<h1>Amrhein Investment Club: Fund Tree</h1>
+				<p style = 'color: steelblue'>Data as of Feb. 2nd, 2015</p>
+			</header>
+		</div>
+		
 		<script type="text/javascript">
 			var w = 700,
 				h = 500;
+			var margin = {left: 35, right: 35};
 
 			var tip = d3.tip()
 					  	.attr("class", "d3-tip")
@@ -68,8 +79,8 @@
 					    			balanceHeader = "Sum: ";
 					    			break;
 					    		case 2: 
-					    			header = "Fund Group: ";
-					    			balanceHeader = "Fund Sum: ";
+					    			header = "Chapter: ";
+					    			balanceHeader = "Balance: ";
 					    			break;
 					    		case 3:
 					    		case 4:
@@ -78,14 +89,20 @@
 					    			header = "Stock Ticker: ";
 					    			balanceHeader = "Market Value: ";
 					    			break;
+					    		case 7:
+					    			header = "Liquidity: ";
+					    			balanceHeader = "Balance: ";
+					    			break;
 					    	}
-					    	return "<strong>" + header +"</strong> <span style='color:" + colors(2) + "'>" + d.name + "</span> <br><strong>"+ balanceHeader +"</strong> <span style='color:" + colors(2) + "'>" + d.value + "</span>";
+					    	return "<strong>" + header +"</strong> <span style='color:" + colors(2) + "'>" + d.name + "</span> <br><strong>"+ balanceHeader +"</strong> <span class = 'price' style='color:" + colors(2) + "'>$" + (d.assets + d.cash) + "</span>";
 		  				})
 
 			var svg = d3.select("body")
 			  			.append("svg")
 						.attr("width", w)
 						.attr("height", h);
+						// Line below doesn't work...
+						// .attr("transform", "translate(" + margin.left +", 0)");
 
 			svg.call(tip);
 
@@ -95,9 +112,9 @@
 						  .nodes(aicDatabase.nodes)
 						  .links(aicDatabase.edges)
 						  .size([w,h])
-						  .linkDistance(80)
-						  .charge(-120)
-						  .gravity(.1)
+						  .linkDistance(40)
+						  .charge(-250)
+						  //.gravity(.1)
 						  .start();
 
 			var edges = svg.selectAll("line")
@@ -115,15 +132,15 @@
 				           .append("circle")
 				           .attr("class","node")
 				           .attr("r", function(d, i) {
-				        		return Math.sqrt(aicDatabase.nodes[i].value) * 3;
+				        		return Math.sqrt((aicDatabase.nodes[i].assets + aicDatabase.nodes[i].cash)/1000);
 				           })
 				           .style("fill", function(d, i) {
+				           		if (aicDatabase.nodes[i].group == 7) {return '#ffec8b';}
 				        		return colors(aicDatabase.nodes[i].group);
 				           })
 				           .on("mouseover", tip.show)
 				           .on("mouseout", tip.hide)
 				           .call(force.drag);
-
 
 			//Every time the simulation "ticks", this will be called
 			force.on("tick", function() {
