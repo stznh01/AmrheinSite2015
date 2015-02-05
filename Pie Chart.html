@@ -76,8 +76,16 @@
 			  	.attr('class','arcs')
 			    .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
 
+			// var dataset = [];
 			var arcs = svg.selectAll("g.arc")
-               .data(pie(function(d,i){ return dataArray[i].assets;}))
+               .data(pie(/*function(d){
+               		for (var i = 0; i < dataArray.length; i++) {
+               			dataset.push(dataArray[i].assets);
+               		};
+               		
+                	return dataset;}*/
+                	dataArray
+            	))
                .enter()
                .append("g")
                .attr("class", "arc");
