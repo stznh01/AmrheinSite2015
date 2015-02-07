@@ -2,9 +2,22 @@
 function loadJSON(filePath) {
   // Load json file;
   var json = loadTextFileAjaxSync(filePath, "application/json");
+
+
+  // CODE ADDED ------------------------------------------------------------ // 
+  /** Adaptation by Hansen: remove "//"
+   *
+   *  (!) BAD abstraction:
+   * This adaptation COULD break your json file! The replace function is added
+   * just to undo the comment fetched from finance.google.com
+   */
+  json = json.replace("// ", "");
+
+  // END OF ADDITION ------------------------------------------------------- //
+
   // Parse json
   return JSON.parse(json);
-}   
+}
 
 // Load text with Ajax synchronously: takes path to file and optional MIME type
 function loadTextFileAjaxSync(filePath, mimeType)
