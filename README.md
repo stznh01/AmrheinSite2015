@@ -12,3 +12,5 @@ Currently using finance.google.com data, requiring legal information. Until then
 	ecp: .. percentage
 	el: market price per share (after hours)
 	elt: market closing time (after hours): Either west coast delay or asian market starts the day
+
+Link example: http://finance.google.com/finance/info?client=ig&q=MSFT,SAM,GOOG

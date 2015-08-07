@@ -1,0 +1,7 @@
+{
+	"fundName": "Growth",
+	"stocks":[
+		{"name":"AGU", "bDate":"01/25/1995"},
+		{"name":"GOOG", "bDate":"04/20/2005"}
+	]
+}
